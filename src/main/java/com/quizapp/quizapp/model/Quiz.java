@@ -1,27 +1,32 @@
 package com.quizapp.quizapp.model;
 
 import java.util.List;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = "quizzes")
 public class Quiz {
 
-    private Long id;
+    @Id
+    private String id; // Changed to String for MongoDB compatibility
+
     private String title;
     private String teacherName;
     private List<Question> questions;
 
     public Quiz() {}
 
-    public Quiz(Long id, String title, String teacherName) {
+    public Quiz(String id, String title, String teacherName) {
         this.id = id;
         this.title = title;
         this.teacherName = teacherName;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

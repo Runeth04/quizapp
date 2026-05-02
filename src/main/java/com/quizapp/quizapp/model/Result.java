@@ -1,19 +1,30 @@
 package com.quizapp.quizapp.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "results")
 public class Result {
 
+    @Id
+    private String id;   // MongoDB auto ID
+
     private String studentName;
-    private Long quizId;
+    private String quizId;   // ✅ must match Quiz (String)
     private int score;
     private int total;
 
     public Result() {}
 
-    public Result(String studentName, Long quizId, int score, int total) {
+    public Result(String studentName, String quizId, int score, int total) {
         this.studentName = studentName;
         this.quizId = quizId;
         this.score = score;
         this.total = total;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getStudentName() {
@@ -24,11 +35,11 @@ public class Result {
         this.studentName = studentName;
     }
 
-    public Long getQuizId() {
+    public String getQuizId() {
         return quizId;
     }
 
-    public void setQuizId(Long quizId) {
+    public void setQuizId(String quizId) {
         this.quizId = quizId;
     }
 

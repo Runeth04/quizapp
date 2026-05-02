@@ -4,25 +4,26 @@ import java.util.List;
 
 public class Question {
 
-    private Long id;
+    private String id;   // ✅ changed to String
+
     private String questionText;
     private List<String> options;
     private int correctAnswerIndex;
 
     public Question() {}
 
-    public Question(Long id, String questionText, List<String> options, int correctAnswerIndex) {
+    public Question(String id, String questionText, List<String> options, int correctAnswerIndex) {
         this.id = id;
         this.questionText = questionText;
         this.options = options;
         this.correctAnswerIndex = correctAnswerIndex;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -4,25 +4,25 @@ import java.util.Map;
 
 public class StudentAnswer {
 
-    private Long quizId;
-    private Map<Long, Integer> answers; // questionId -> selected option index
+    private String quizId;
+    private Map<String, Integer> answers; // questionId -> selected option index
     private String studentName;
     
     public StudentAnswer() {}
 
-    public Long getQuizId() {
+    public String getQuizId() {
         return quizId;
     }
 
-    public void setQuizId(Long quizId) {
+    public void setQuizId(String quizId) {
         this.quizId = quizId;
     }
 
-    public Map<Long, Integer> getAnswers() {
+    public Map<String, Integer> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(Map<Long, Integer> answers) {
+    public void setAnswers(Map<String, Integer> answers) {
         this.answers = answers;
     }
 

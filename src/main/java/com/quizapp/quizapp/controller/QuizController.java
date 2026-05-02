@@ -5,6 +5,10 @@ import com.quizapp.quizapp.model.Result;
 import com.quizapp.quizapp.model.LeaderboardEntry;
 import com.quizapp.quizapp.model.Question;
 import com.quizapp.quizapp.model.StudentAnswer;
+
+import com.quizapp.quizapp.repository.QuizRepository;
+import com.quizapp.quizapp.repository.ResultRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -14,32 +18,31 @@ import java.util.Map;
 @RestController
 public class QuizController {
 
-    private List<Quiz> quizList = new ArrayList<>();
-    private Long nextId = 1L;
+    @Autowired
+    private QuizRepository quizRepository;
 
-    private List<Result> results = new ArrayList<>();
-    
+    @Autowired
+    private ResultRepository resultRepository;
+
     // GET all quizzes
     @GetMapping("/quiz")
     public List<Quiz> getAllQuizzes() {
-        return quizList;
+        return quizRepository.findAll();   // ✅
     }
 
     // POST create quiz
     @PostMapping("/quiz")
     public Quiz createQuiz(@RequestBody Quiz quiz) {
-        quiz.setId(nextId++);
-        quizList.add(quiz);
-        return quiz;
+        return quizRepository.save(quiz);  // ✅
     }
 
-    // 👉 ADD IT HERE (inside class, below other methods)
+    // Submit quiz
     @PostMapping("/quiz/submit")
     public Map<String, Integer> submitQuiz(@RequestBody StudentAnswer studentAnswer) {
 
-        Quiz quiz = quizList.stream()
-                .filter(q -> q.getId().equals(studentAnswer.getQuizId()))
-                .findFirst()
+        // ✅ Fetch from DB
+        Quiz quiz = quizRepository
+                .findById(studentAnswer.getQuizId())
                 .orElse(null);
 
         if (quiz == null) {
@@ -61,25 +64,31 @@ public class QuizController {
         }
 
         int total = quiz.getQuestions().size();
-        
+
         Result result = new Result(
-            studentAnswer.getStudentName(),
-            quiz.getId(),
-            score,
-            total
+                studentAnswer.getStudentName(),
+                quiz.getId(),
+                score,
+                total
         );
 
-        results.add(result);
+        // ✅ Save to DB
+        resultRepository.save(result);
 
         return Map.of(
-            "score", score,
-            "total", total
+                "score", score,
+                "total", total
         );
     }
 
+    // Leaderboard
     @GetMapping("/quiz/results")
     public List<LeaderboardEntry> getResults() {
-        
+
+        // ✅ Fetch from DB
+        List<Result> results = resultRepository.findAll();
+
+        // Sort
         results.sort((a, b) -> b.getScore() - a.getScore());
 
         List<LeaderboardEntry> leaderboard = new ArrayList<>();
@@ -88,10 +97,10 @@ public class QuizController {
 
         for (Result r : results) {
             leaderboard.add(new LeaderboardEntry(
-                rank++,
-                r.getStudentName(),
-                r.getScore(),
-                r.getTotal()
+                    rank++,
+                    r.getStudentName(),
+                    r.getScore(),
+                    r.getTotal()
             ));
         }
 
