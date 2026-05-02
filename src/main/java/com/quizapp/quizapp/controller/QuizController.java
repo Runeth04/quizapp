@@ -2,6 +2,7 @@ package com.quizapp.quizapp.controller;
 
 import com.quizapp.quizapp.model.Quiz;
 import com.quizapp.quizapp.model.Result;
+import com.quizapp.quizapp.model.LeaderboardEntry;
 import com.quizapp.quizapp.model.Question;
 import com.quizapp.quizapp.model.StudentAnswer;
 import org.springframework.web.bind.annotation.*;
@@ -77,7 +78,23 @@ public class QuizController {
     }
 
     @GetMapping("/quiz/results")
-    public List<Result> getResults() {
-        return results;
+    public List<LeaderboardEntry> getResults() {
+        
+        results.sort((a, b) -> b.getScore() - a.getScore());
+
+        List<LeaderboardEntry> leaderboard = new ArrayList<>();
+
+        int rank = 1;
+
+        for (Result r : results) {
+            leaderboard.add(new LeaderboardEntry(
+                rank++,
+                r.getStudentName(),
+                r.getScore(),
+                r.getTotal()
+            ));
+        }
+
+        return leaderboard;
     }
 }
