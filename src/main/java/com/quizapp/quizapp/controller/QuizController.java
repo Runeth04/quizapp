@@ -41,9 +41,7 @@ public class QuizController {
     public Map<String, Integer> submitQuiz(@RequestBody StudentAnswer studentAnswer) {
 
         // ✅ Fetch from DB
-        Quiz quiz = quizRepository
-                .findById(studentAnswer.getQuizId())
-                .orElse(null);
+        Quiz quiz = quizRepository.findById(studentAnswer.getQuizId()).orElse(null);
 
         if (quiz == null) {
             return Map.of(
