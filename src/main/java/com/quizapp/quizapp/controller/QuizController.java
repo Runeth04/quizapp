@@ -55,7 +55,7 @@ public class QuizController {
         int score = 0;
 
         for (Question question : quiz.getQuestions()) {
-            Integer selected = studentAnswer.getAnswers().get(question.getId());
+            Integer selected = studentAnswer.getAnswers().get(String.valueOf(question.getId()));
 
             if (selected != null && selected == question.getCorrectAnswerIndex()) {
                 score++;
@@ -104,5 +104,10 @@ public class QuizController {
         }
 
         return leaderboard;
+    }
+    // ✅ Results by Quiz (Teacher view)
+    @GetMapping("/results/{quizId}")
+    public List<Result> getResultsByQuiz(@PathVariable String quizId) {
+        return resultRepository.findByQuizId(quizId);
     }
 }
