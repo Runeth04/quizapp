@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Frontend build files
+quiz-frontend/node_modules/
+quiz-frontend/.vite/
