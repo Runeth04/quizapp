@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Quiz App</title>
+    </head>
+<body>
+
+    <h1>Quiz App</h1>
+
+    <button onclick="loadQuiz()">Load Quiz</button>
+
+    <div id="quiz"></div>
+
+    <br>
+    <input type="text" id="name" placeholder="Your Name">
+    <br><br>
+
+    <button onclick="submitQuiz()">Submit</button>
+
+    <script>
+    let currentQuiz = null;
+
+    function loadQuiz() {
+        fetch('/quiz')
+            .then(res => res.json())
+            .then(data => {
+                currentQuiz = data[0];
+
+                let html = `<h2>${currentQuiz.title}</h2>`;
+
+                currentQuiz.questions.forEach(q => {
+                    html += `<p>${q.questionText}</p>`;
+                    q.options.forEach((opt, i) => {
+                        html += `
+                            <input type="radio" name="${q.id}" value="${i}">
+                            ${opt}<br>
+                        `;
+                    });
+                });
+
+                document.getElementById("quiz").innerHTML = html;
+            });
+    }
+
+    function submitQuiz() {
+        const name = document.getElementById("name").value;
+        let answers = {};
+
+        currentQuiz.questions.forEach(q => {
+            let selected = document.querySelector(`input[name="${q.id}"]:checked`);
+            if (selected) {
+                answers[q.id] = parseInt(selected.value);
+            }
+        });
+
+        fetch('/quiz/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                studentName: name,
+                quizId: currentQuiz.id,
+                answers: answers
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(`Score: ${data.score}/${data.total}`);
+        });
+    }
+    </script>
+
+    </body>
+</html>
