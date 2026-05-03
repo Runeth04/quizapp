@@ -21,6 +21,18 @@ function App() {
   };
 
   const submitQuiz = async () => {
+    // ✅ Validate name
+    if (!name.trim()) {
+      alert("Please enter your name");
+      return;
+    }
+
+    // ✅ Validate all questions answered
+    if (!quiz || Object.keys(answers).length !== quiz.questions.length) {
+      alert("Please answer all questions");
+      return;
+    }
+
     const res = await fetch("http://localhost:8080/quiz/submit", {
       method: "POST",
       headers: {
@@ -35,6 +47,8 @@ function App() {
 
     const data = await res.json();
     alert(`Score: ${data.score}/${data.total}`);
+
+    loadLeaderboard();
   };
 
   const loadLeaderboard = async () => {
