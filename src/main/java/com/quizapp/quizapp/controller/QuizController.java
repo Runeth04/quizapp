@@ -110,4 +110,16 @@ public class QuizController {
     public List<Result> getResultsByQuiz(@PathVariable String quizId) {
         return resultRepository.findByQuizId(quizId);
     }
+    // ✅ Delete quiz (Teacher view)
+    @DeleteMapping("/quiz/{id}")
+    public void deleteQuiz(@PathVariable String id) {
+        quizRepository.deleteById(id);
+    }
+    
+    // ✅ Update quiz (Teacher view)
+    @PutMapping("/quiz/{id}")
+    public Quiz updateQuiz(@PathVariable String id, @RequestBody Quiz quiz) {
+        quiz.setId(id);
+        return quizRepository.save(quiz);
+    }
 }

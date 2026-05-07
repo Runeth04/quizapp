@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 function StudentPage() {
   const [quiz, setQuiz] = useState(null);
+  const [quizzes, setQuizzes] = useState([]);
   const [answers, setAnswers] = useState({});
   const [name, setName] = useState("");
 
   const loadQuiz = async () => {
     const res = await fetch("http://localhost:8080/quiz");
     const data = await res.json();
-    setQuiz(data[0]);
+    
+    setQuizzes(data);
   };
 
   const handleChange = (qId, value) => {
@@ -38,11 +39,6 @@ function StudentPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
-      <nav className="w-full max-w-xl mb-6 flex justify-between bg-white p-3 rounded shadow">
-        <Link to="/" className="text-blue-600 font-semibold">Dashboard</Link>
-        <Link to="/create" className="text-blue-600 font-semibold">Create Quiz</Link>
-        <Link to="/student" className="text-blue-600 font-semibold">Student</Link>
-      </nav>
       <h1 className="text-3xl font-bold mb-6">Student Quiz</h1>
 
       <button
@@ -51,6 +47,18 @@ function StudentPage() {
       >
         Load Quiz
       </button>
+
+      <div className="w-full max-w-xl mb-4">
+        {quizzes.map((q) => (
+            <button
+            key={q.id}
+            onClick={() => setQuiz(q)}
+            className="block w-full bg-white shadow p-3 rounded mb-2 hover:bg-gray-100 text-left"
+            >
+            {q.title}
+            </button>
+        ))}
+        </div>
 
       {quiz && (
         <div className="bg-white p-6 rounded shadow w-full max-w-xl">
@@ -86,10 +94,15 @@ function StudentPage() {
 
           <button
             onClick={submitQuiz}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          >
+            disabled={!name || Object.keys(answers).length === 0}
+            className={`px-4 py-2 rounded text-white ${
+                !name || Object.keys(answers).length === 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-green-500 hover:bg-green-600"
+            }`}
+            >
             Submit
-          </button>
+        </button>
         </div>
       )}
     </div>
